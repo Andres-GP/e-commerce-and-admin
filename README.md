@@ -13,7 +13,7 @@ Built with **Next.js**, **TypeScript**, **TailwindCSS**, **Radix UI**, and **Exp
 
 ---
 
-## ✨ Key Features
+## ⚙️ Microfrontends
 
 ### 🛍️ **E-Commerce App**
 
