@@ -1,135 +1,106 @@
-# Turborepo starter
+# 🛒 E-Commerce & Admin Monorepo
 
-This Turborepo starter is maintained by the Turborepo core team.
+**E-Commerce & Admin** is a modern e-commerce platform built as a **Turborepo monorepo** with microfrontends and microservices, integrating **two microfrontends** (`ecommerce` and `admin`) and **four independent microservices** for a scalable, modular, and high-performance system.
 
-## Using this example
+Built with **Next.js**, **TypeScript**, **TailwindCSS**, **Radix UI**, and **Express + MongoDB** on the backend, it combines a smooth user experience with professional, enterprise-level architecture.
 
-Run the following command:
+---
 
-```sh
-npx create-turbo@latest
-```
+## 🚀 Live Demos
 
-## What's inside?
+- 🛍️ **E-Commerce App** → [View on Vercel](https://ecommerce-app.vercel.app)
+- 🧑‍💼 **Admin App** → [View on Vercel](https://admin-dashboard.vercel.app)
 
-This Turborepo includes the following packages/apps:
+---
 
-### Apps and Packages
+## ✨ Key Features
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+### 🛍️ **E-Commerce App**
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+- 🏪 Full catalog with **products**, **categories**, and **dynamic filters**.
+- 💳 **Integrated payment site**.
+- 🛒 Persistent **shopping cart** connected to the `cart-service`.
+- 🚚 **Shipping destination form**.
+- 📞 Fully functional **contact page**.
+- ⭐ **Review system** connected to `reviews-service`.
+- 🔗 Full integration with microservices (`cart`, `orders`, `products`, `reviews`).
+- 🌓 Light/Dark mode with `next-themes`.
+- 📱 **Fully responsive** (mobile-first).
+- ⚙️ Form validation using **Zod + React Hook Form**.
+- 🧪 **Unit and integration tests** with Jest and Testing Library.
 
-### Utilities
+### 🧑‍💼 **Admin App**
 
-This Turborepo has some additional tools already setup for you:
+- 📦 Manage **products**.
+- 🧾 Monitor **orders**, **users**, **carts**, and **reviews**.
+- 📊 Interactive dashboard with **Recharts** and dynamic components.
+- 🔐 Direct connection to microservices (`products`, `orders`, `reviews`, `cart`).
+- ⚙️ Forms with **React Hook Form + Zod**.
+- 🧱 Modular UI using **Radix UI + TailwindCSS**.
+- 💬 Elegant notifications with **Sonner**.
+- 🧪 Full **unit and integration test coverage**.
+- 🌙 Dark mode support.
+- 🧭 **SEO optimized** with Next.js.
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+---
 
-### Build
+Each microservice runs **independently**, has its own **MongoDB database**, and communicates with the frontends via **REST or GraphQL APIs**.
 
-To build all apps and packages, run the following command:
+---
 
-```
-cd my-turborepo
+## 🧠 Technology Stack
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
+| Category                | Technologies                                           |
+| ----------------------- | ------------------------------------------------------ |
+| **Frontend Frameworks** | Next.js (13–16), React 18                              |
+| **Language**            | TypeScript                                             |
+| **UI / Styling**        | TailwindCSS, Radix UI, clsx, class-variance-authority  |
+| **Forms & Validation**  | React Hook Form, Zod                                   |
+| **Themes**              | next-themes                                            |
+| **Visual Components**   | MUI, radix, self-created                               |
+| **Backend**             | Express.js, Node.js                                    |
+| **Database**            | MongoDB                                                |
+| **Testing**             | Jest, Testing Library, ts-jest, jest-environment-jsdom |
+| **Dev Tools**           | TypeScript, ESLint, PostCSS                            |
+| **Deployment**          | Vercel (Frontends), Render / (Microservices)           |
+| **Monorepo Tooling**    | Turborepo                                              |
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
+---
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+## ⚙️ Microservices
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+Each microservice runs independently.
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+### 🧩 **cart-service**
 
-### Develop
+- Manages user shopping carts.
+- APIs:
+  - `POST /cart` → create cart.
+  - `PATCH /cart/:id` → add or remove products.
+  - `GET /cart/:userId` → get current cart.
+- Database: `mongodb://cart-db`
 
-To develop all apps and packages, run the following command:
+### 🧩 **reviews-service**
 
-```
-cd my-turborepo
+- Handles product reviews and ratings.
+- APIs:
+  - `POST /reviews` → create review.
+  - `GET /reviews/:productId` → get reviews by product.
+- Database: `mongodb://reviews-db`
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
+### 🧩 **orders-service**
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
+- Processes orders and payments.
+- APIs:
+  - `POST /orders` → create order.
+  - `GET /orders/:userId` → list user orders.
+- Database: `mongodb://orders-db`
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+### 🧩 **products-service**
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+- Manages product catalog and categories.
+- APIs:
+  - `GET /products` → list products.
+  - `GET /products/:id` → get product details.
+  - `POST /products` → create product.
+- Database: `mongodb://products-db`
