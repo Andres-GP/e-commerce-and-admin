@@ -74,7 +74,7 @@ export default function CartPage() {
         </Box>
 
         <Grid container spacing={4}>
-          <Grid item xs={12} md={8}>
+          <Grid item size={12}>
             <Card>
               <CardContent sx={{ p: 3 }}>
                 {cart.map((item, index) => (
@@ -85,7 +85,7 @@ export default function CartPage() {
                           width: 120,
                           height: 120,
                           borderRadius: "12px",
-                          background: `url(/placeholder.svg?height=120&width=120&query=${item.image})`,
+                          background: `url(${item.image})`,
                           backgroundSize: "cover",
                           backgroundPosition: "center",
                           flexShrink: 0,

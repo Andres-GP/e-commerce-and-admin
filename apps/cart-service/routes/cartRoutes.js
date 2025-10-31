@@ -92,29 +92,28 @@ router.post("/", async (req, res) => {
 
 router.delete("/", async (req, res) => {
   try {
-    const userId = "guest";
+    const userId = req.query.userId || "guest";
     const productId = req.query.productId;
 
-    if (!productId) {
-      return res.status(400).json({
-        success: false,
-        error: "Product ID is required",
-      });
+    console.log("productId:", productId);
+    if (productId && productId !== "null" && productId !== "undefined") {
+      await CartItem.deleteOne({ userId, productId });
+    } else {
+      await CartItem.deleteMany({ userId });
     }
-
-    await CartItem.deleteOne({ userId, productId });
 
     const updatedCart = await CartItem.find({ userId });
 
     res.json({
       success: true,
       data: updatedCart,
-      message: "Item removed from cart",
+      message: productId ? "Item removed from cart" : "Cart cleared",
     });
   } catch (error) {
+    console.error("Cart DELETE error:", error);
     res
       .status(500)
-      .json({ success: false, error: "Failed to remove item from cart" });
+      .json({ success: false, error: "Failed to remove item(s) from cart" });
   }
 });
 

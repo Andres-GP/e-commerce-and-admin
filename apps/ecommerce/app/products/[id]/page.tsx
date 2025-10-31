@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   Container,
@@ -29,41 +29,33 @@ import { useParams } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
 import { getProductById } from "@/lib/product-data";
 
-const reviews = [
-  {
-    id: 1,
-    name: "Sarah Johnson",
-    rating: 5,
-    date: "2 weeks ago",
-    comment:
-      "Absolutely love these headphones! The sound quality is incredible and the noise cancellation works perfectly.",
-    avatar: "user1",
-  },
-  {
-    id: 2,
-    name: "Michael Chen",
-    rating: 4,
-    date: "1 month ago",
-    comment:
-      "Great product overall. Very comfortable for long listening sessions. Battery life is impressive.",
-    avatar: "user2",
-  },
-  {
-    id: 3,
-    name: "Emma Davis",
-    rating: 5,
-    date: "1 month ago",
-    comment: "Best headphones I've ever owned. Worth every penny!",
-    avatar: "user3",
-  },
-];
-
 export default function ProductDetailPage() {
   const params = useParams();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState(0);
   const { addToCart } = useCart();
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchReviews = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(`/api/reviews`);
+      const data = await res.json();
+      if (data.success) {
+        setReviews(data.data);
+      }
+    } catch (err) {
+      console.error("❌ Error fetching reviews:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchReviews();
+  }, [params.id]);
 
   const product = getProductById(Number(params.id)) || getProductById(1)!;
 
@@ -488,57 +480,58 @@ export default function ProductDetailPage() {
               </Box>
 
               <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-                {reviews.map((review) => (
-                  <Card key={review.id}>
-                    <CardContent>
-                      <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
-                        <Avatar
-                          sx={{
-                            width: 48,
-                            height: 48,
-                            bgcolor: "primary.main",
-                          }}
-                        >
-                          {review.name.charAt(0)}
-                        </Avatar>
-                        <Box sx={{ flex: 1 }}>
-                          <Box
+                {!loading &&
+                  reviews.map((review) => (
+                    <Card key={review.id}>
+                      <CardContent>
+                        <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
+                          <Avatar
                             sx={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              mb: 1,
+                              width: 48,
+                              height: 48,
+                              bgcolor: "primary.main",
                             }}
                           >
-                            <Typography
-                              variant="subtitle2"
-                              sx={{ fontWeight: 600 }}
+                            {review.name.charAt(0)}
+                          </Avatar>
+                          <Box sx={{ flex: 1 }}>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                mb: 1,
+                              }}
                             >
-                              {review.name}
-                            </Typography>
+                              <Typography
+                                variant="subtitle2"
+                                sx={{ fontWeight: 600 }}
+                              >
+                                {review.name}
+                              </Typography>
+                              <Typography
+                                variant="caption"
+                                sx={{ color: "text.secondary" }}
+                              >
+                                {review.date}
+                              </Typography>
+                            </Box>
+                            <Rating
+                              value={review.rating}
+                              size="small"
+                              readOnly
+                              sx={{ mb: 1 }}
+                            />
                             <Typography
-                              variant="caption"
-                              sx={{ color: "text.secondary" }}
+                              variant="body2"
+                              sx={{ color: "text.secondary", lineHeight: 1.6 }}
                             >
-                              {review.date}
+                              {review.comment}
                             </Typography>
                           </Box>
-                          <Rating
-                            value={review.rating}
-                            size="small"
-                            readOnly
-                            sx={{ mb: 1 }}
-                          />
-                          <Typography
-                            variant="body2"
-                            sx={{ color: "text.secondary", lineHeight: 1.6 }}
-                          >
-                            {review.comment}
-                          </Typography>
                         </Box>
-                      </Box>
-                    </CardContent>
-                  </Card>
-                ))}
+                      </CardContent>
+                    </Card>
+                  ))}
               </Box>
             </Box>
           )}

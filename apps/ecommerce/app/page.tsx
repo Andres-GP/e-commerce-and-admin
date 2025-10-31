@@ -1,5 +1,6 @@
 "use client";
 
+import react, { useEffect, useState } from "react";
 import {
   Box,
   Container,
@@ -22,10 +23,46 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useCart } from "@/lib/cart-context";
-import { products, categories } from "@/lib/product-data";
+import { categories } from "@/lib/product-data";
 
 export default function HomePage() {
   const { addToCart } = useCart();
+
+  const [products, setProducts] = useState([]);
+
+  const fetchProducts = async (filters: {
+    category?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    search?: string;
+    sort?: string;
+  }) => {
+    try {
+      const params = new URLSearchParams();
+
+      if (filters.category) params.append("category", filters.category);
+      if (filters.minPrice) params.append("minPrice", String(filters.minPrice));
+      if (filters.maxPrice) params.append("maxPrice", String(filters.maxPrice));
+      if (filters.search) params.append("search", filters.search);
+      if (filters.sort) params.append("sort", filters.sort);
+
+      const res = await fetch(`/api/products?${params.toString()}`);
+      const data = await res.json();
+
+      if (!data.success) throw new Error(data.error);
+
+      return data.data;
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      return [];
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts({ category: "Electronics", sort: "price-low" }).then(
+      setProducts
+    );
+  }, []);
 
   const someProducts = products.slice(0, 3);
 

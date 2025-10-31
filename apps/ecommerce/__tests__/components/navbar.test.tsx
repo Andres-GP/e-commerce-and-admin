@@ -1,42 +1,44 @@
-import { render, screen } from "@testing-library/react"
-import Navbar from "@/components/navbar"
-import { CartProvider } from "@/lib/cart-context"
-import jest from "jest"
+import { render, screen } from "@testing-library/react";
+import Navbar from "@/components/navbar";
 
-// Mock next/navigation
 jest.mock("next/navigation", () => ({
   usePathname: () => "/",
-}))
+}));
+
+jest.mock("next/link", () => {
+  return ({ href, children }: any) => <a href={href}>{children}</a>;
+});
+
+jest.mock("@/lib/cart-context", () => ({
+  useCart: () => ({
+    getTotalItems: () => 3,
+  }),
+}));
 
 describe("Navbar Component", () => {
-  it("renders the logo", () => {
-    render(
-      <CartProvider>
-        <Navbar />
-      </CartProvider>,
-    )
-    expect(screen.getByText("ShopLux")).toBeInTheDocument()
-  })
+  beforeEach(() => {
+    render(<Navbar />);
+  });
 
-  it("renders navigation links", () => {
-    render(
-      <CartProvider>
-        <Navbar />
-      </CartProvider>,
-    )
-    expect(screen.getByText("Home")).toBeInTheDocument()
-    expect(screen.getByText("Products")).toBeInTheDocument()
-    expect(screen.getByText("About")).toBeInTheDocument()
-    expect(screen.getByText("Contact")).toBeInTheDocument()
-  })
+  it("muestra el nombre de la tienda", () => {
+    expect(screen.getByText("LuxeStore")).toBeInTheDocument();
+  });
 
-  it("renders cart icon", () => {
-    render(
-      <CartProvider>
-        <Navbar />
-      </CartProvider>,
-    )
-    const cartButton = screen.getByRole("button", { name: /cart/i })
-    expect(cartButton).toBeInTheDocument()
-  })
-})
+  it("muestra los elementos de navegación principales", () => {
+    expect(screen.getByText("Home")).toBeInTheDocument();
+    expect(screen.getByText("Products")).toBeInTheDocument();
+    expect(screen.getByText("About")).toBeInTheDocument();
+    expect(screen.getByText("Contact")).toBeInTheDocument();
+  });
+
+  it("muestra el ícono del carrito con el número correcto", () => {
+    expect(screen.getByText("3")).toBeInTheDocument();
+  });
+
+  it("tiene un botón para abrir el menú móvil", () => {
+    const menuButton = screen
+      .getAllByRole("button")
+      .find((btn) => btn.querySelector("svg"));
+    expect(menuButton).toBeTruthy();
+  });
+});

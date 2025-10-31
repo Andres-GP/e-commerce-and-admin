@@ -12,11 +12,16 @@ const shippingAddressSchema = new mongoose.Schema({
 });
 
 const OrderItemSchema = new mongoose.Schema({
-  productId: { type: String, required: true },
+  addedAt: { type: String, required: true },
+  image: { type: String },
   name: { type: String, required: true },
   price: { type: Number, required: true },
+  productId: { type: String, required: true },
   quantity: { type: Number, required: true },
-  image: { type: String },
+  addedAt: { type: String, required: true },
+  userId: { type: String, required: true },
+  __v: { type: Number },
+  _id: { type: String },
 });
 
 const OrderSchema = new mongoose.Schema({

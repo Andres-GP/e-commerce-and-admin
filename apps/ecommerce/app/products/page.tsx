@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   Container,
@@ -22,7 +22,7 @@ import {
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import Link from "next/link";
 import { useCart } from "@/lib/cart-context";
-import { products, categories } from "@/lib/product-data";
+import { categories } from "@/lib/product-data";
 
 export default function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -31,6 +31,41 @@ export default function ProductsPage() {
   const [sortBy, setSortBy] = useState("featured");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { addToCart } = useCart();
+  const [products, setProducts] = useState([]);
+
+  const fetchProducts = async (filters: {
+    category?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    search?: string;
+    sort?: string;
+  }) => {
+    try {
+      const params = new URLSearchParams();
+
+      if (filters.category) params.append("category", filters.category);
+      if (filters.minPrice) params.append("minPrice", String(filters.minPrice));
+      if (filters.maxPrice) params.append("maxPrice", String(filters.maxPrice));
+      if (filters.search) params.append("search", filters.search);
+      if (filters.sort) params.append("sort", filters.sort);
+
+      const res = await fetch(`/api/products?${params.toString()}`);
+      const data = await res.json();
+
+      if (!data.success) throw new Error(data.error);
+
+      return data.data; // aquí vienen los productos
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      return [];
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts({ category: "Electronics", sort: "price-low" }).then(
+      setProducts
+    );
+  }, []);
 
   // Filter products
   const filteredProducts = products.filter((product) => {
@@ -210,7 +245,7 @@ export default function ProductsPage() {
             </Card>
           </Grid>
 
-          <Grid item xs={12} md={9}>
+          <Grid item size={12}>
             <Box sx={{ mb: 3 }}>
               <Typography variant="body2" sx={{ color: "text.secondary" }}>
                 Showing {sortedProducts.length} of {products.length} products
@@ -351,6 +386,7 @@ export default function ProductsPage() {
                 sx={{
                   textAlign: "center",
                   py: 8,
+                  width: "100%",
                 }}
               >
                 <Typography

@@ -33,16 +33,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const userId = "guest";
 
+  const fetchCart = async () => {
+    try {
+      const res = await fetch(`/api/cart?userId=${userId}`);
+      const data = await res.json();
+      if (data.success) setCart(data.data);
+    } catch (err) {
+      console.error("Error fetching cart:", err);
+    }
+  };
+
   useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        const res = await fetch(`/api/cart?userId=${userId}`);
-        const data = await res.json();
-        if (data.success) setCart(data.data);
-      } catch (err) {
-        console.error("Error fetching cart:", err);
-      }
-    };
     fetchCart();
   }, []);
 
@@ -107,12 +108,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const clearCart = async () => {
     try {
-      const res = await fetch(`/api/cart/clear?userId=${userId}`, {
+      const res = await fetch(`/api/cart?userId=${userId}`, {
         method: "DELETE",
       });
       const data = await res.json();
-      if (data.success) setCart([]);
-      else console.error("Error clearing cart:", data.error);
+      if (data.success) {
+        setCart([]);
+
+        fetchCart();
+      } else {
+        console.error("Error clearing cart:", data.error);
+      }
     } catch (err) {
       console.error("Error clearing cart:", err);
     }
