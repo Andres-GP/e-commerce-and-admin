@@ -9,7 +9,7 @@ Built with **Next.js**, **TypeScript**, **TailwindCSS**, **Radix UI**, and **Exp
 ## 🚀 Live Demos
 
 - 🛍️ **E-Commerce App** → [View on Vercel](https://ecommerce-app.vercel.app)
-- 🧑‍💼 **Admin App** → [View on Vercel](https://admin-dashboard.vercel.app)
+- 🧑‍💼 **Admin App** → [View on Vercel](https://e-commerce-admin-two-chi.vercel.app/)
 
 ---
 

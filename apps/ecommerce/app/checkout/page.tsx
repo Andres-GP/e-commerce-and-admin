@@ -1,8 +1,6 @@
 "use client";
 
-import type React from "react";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   Container,
@@ -25,9 +23,9 @@ import { useCart } from "@/lib/cart-context";
 export default function CheckoutPage() {
   const router = useRouter();
   const { cart, getTotalPrice, clearCart } = useCart();
+  const [mounted, setMounted] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("card");
   const [processing, setProcessing] = useState(false);
-  const total = (getTotalPrice() * 1.1).toFixed(2);
   const [shippingAddress, setShippingAddress] = useState({
     firstName: "",
     lastName: "",
@@ -38,6 +36,15 @@ export default function CheckoutPage() {
     state: "",
     zip: "",
   });
+
+  useEffect(() => {
+    setMounted(true);
+    if (cart.length === 0) {
+      router.push("/cart");
+    }
+  }, [cart, router]);
+
+  const total = (getTotalPrice() * 1.1).toFixed(2);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,16 +75,13 @@ export default function CheckoutPage() {
       }
     } catch (error) {
       console.error("Error creating order:", error);
-      alert("There was an erre when processing the order. Try again.");
+      alert("There was an error when processing the order. Try again.");
     } finally {
       setProcessing(false);
     }
   };
 
-  if (cart.length === 0) {
-    router.push("/cart");
-    return null;
-  }
+  if (!mounted || cart.length === 0) return null;
 
   return (
     <Box className="page-transition" sx={{ minHeight: "100vh", py: 8 }}>
@@ -106,125 +110,49 @@ export default function CheckoutPage() {
                   <Typography variant="h5" sx={{ mb: 3, fontWeight: 700 }}>
                     Shipping Information
                   </Typography>
-
-                  {/** ✅ Estado centralizado */}
-                  {/* Justo encima del return */}
-                  {/* const [shippingAddress, setShippingAddress] = useState({...}) */}
-
                   <Grid container spacing={3}>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        label="First Name"
-                        fullWidth
-                        required
-                        value={shippingAddress.firstName}
-                        onChange={(e) =>
-                          setShippingAddress({
-                            ...shippingAddress,
-                            firstName: e.target.value,
-                          })
+                    {[
+                      { label: "First Name", key: "firstName" },
+                      { label: "Last Name", key: "lastName" },
+                      { label: "Email Address", key: "email", type: "email" },
+                      { label: "Phone Number", key: "phone" },
+                      { label: "Address", key: "address" },
+                      { label: "City", key: "city" },
+                      { label: "State", key: "state" },
+                      { label: "ZIP Code", key: "zip" },
+                    ].map((field) => (
+                      <Grid
+                        item
+                        xs={12}
+                        sm={
+                          field.key === "firstName" ||
+                          field.key === "lastName" ||
+                          field.key === "city" ||
+                          field.key === "state"
+                            ? 6
+                            : 12
                         }
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        label="Last Name"
-                        fullWidth
-                        required
-                        value={shippingAddress.lastName}
-                        onChange={(e) =>
-                          setShippingAddress({
-                            ...shippingAddress,
-                            lastName: e.target.value,
-                          })
-                        }
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        label="Email Address"
-                        type="email"
-                        fullWidth
-                        required
-                        value={shippingAddress.email}
-                        onChange={(e) =>
-                          setShippingAddress({
-                            ...shippingAddress,
-                            email: e.target.value,
-                          })
-                        }
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        label="Phone Number"
-                        fullWidth
-                        required
-                        value={shippingAddress.phone}
-                        onChange={(e) =>
-                          setShippingAddress({
-                            ...shippingAddress,
-                            phone: e.target.value,
-                          })
-                        }
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        label="Address"
-                        fullWidth
-                        required
-                        value={shippingAddress.address}
-                        onChange={(e) =>
-                          setShippingAddress({
-                            ...shippingAddress,
-                            address: e.target.value,
-                          })
-                        }
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        label="City"
-                        fullWidth
-                        required
-                        value={shippingAddress.city}
-                        onChange={(e) =>
-                          setShippingAddress({
-                            ...shippingAddress,
-                            city: e.target.value,
-                          })
-                        }
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={3}>
-                      <TextField
-                        label="State"
-                        fullWidth
-                        required
-                        value={shippingAddress.state}
-                        onChange={(e) =>
-                          setShippingAddress({
-                            ...shippingAddress,
-                            state: e.target.value,
-                          })
-                        }
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={3}>
-                      <TextField
-                        label="ZIP Code"
-                        fullWidth
-                        required
-                        value={shippingAddress.zip}
-                        onChange={(e) =>
-                          setShippingAddress({
-                            ...shippingAddress,
-                            zip: e.target.value,
-                          })
-                        }
-                      />
-                    </Grid>
+                        key={field.key}
+                      >
+                        <TextField
+                          label={field.label}
+                          type={field.type || "text"}
+                          fullWidth
+                          required
+                          value={
+                            shippingAddress[
+                              field.key as keyof typeof shippingAddress
+                            ]
+                          }
+                          onChange={(e) =>
+                            setShippingAddress({
+                              ...shippingAddress,
+                              [field.key]: e.target.value,
+                            })
+                          }
+                        />
+                      </Grid>
+                    ))}
                   </Grid>
                 </CardContent>
               </Card>
