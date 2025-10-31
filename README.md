@@ -42,31 +42,6 @@ Built with **Next.js**, **TypeScript**, **TailwindCSS**, **Radix UI**, and **Exp
 - 🌙 Dark mode support.
 - 🧭 **SEO optimized** with Next.js.
 
----
-
-Each microservice runs **independently**, has its own **MongoDB database**, and communicates with the frontends via **REST or GraphQL APIs**.
-
----
-
-## 🧠 Technology Stack
-
-| Category                | Technologies                                           |
-| ----------------------- | ------------------------------------------------------ |
-| **Frontend Frameworks** | Next.js (13–16), React 18                              |
-| **Language**            | TypeScript                                             |
-| **UI / Styling**        | TailwindCSS, Radix UI, clsx, class-variance-authority  |
-| **Forms & Validation**  | React Hook Form, Zod                                   |
-| **Themes**              | next-themes                                            |
-| **Visual Components**   | MUI, radix, self-created                               |
-| **Backend**             | Express.js, Node.js                                    |
-| **Database**            | MongoDB                                                |
-| **Testing**             | Jest, Testing Library, ts-jest, jest-environment-jsdom |
-| **Dev Tools**           | TypeScript, ESLint, PostCSS                            |
-| **Deployment**          | Vercel (Frontends), Render / (Microservices)           |
-| **Monorepo Tooling**    | Turborepo                                              |
-
----
-
 ## ⚙️ Microservices
 
 Each microservice runs independently.
@@ -104,3 +79,28 @@ Each microservice runs independently.
   - `GET /products/:id` → get product details.
   - `POST /products` → create product.
 - Database: `mongodb://products-db`
+
+---
+
+Each microservice runs **independently**, has its own **MongoDB database**, and communicates with the frontends via **REST or GraphQL APIs**.
+
+---
+
+## 🧠 Technology Stack
+
+| Category                | Technologies                                           |
+| ----------------------- | ------------------------------------------------------ |
+| **Frontend Frameworks** | Next.js (13–16), React 18                              |
+| **Language**            | TypeScript                                             |
+| **UI / Styling**        | TailwindCSS, Radix UI, clsx, class-variance-authority  |
+| **Forms & Validation**  | React Hook Form, Zod                                   |
+| **Themes**              | next-themes                                            |
+| **Visual Components**   | MUI, radix, self-created                               |
+| **Backend**             | Express.js, Node.js                                    |
+| **Database**            | MongoDB                                                |
+| **Testing**             | Jest, Testing Library, ts-jest, jest-environment-jsdom |
+| **Dev Tools**           | TypeScript, ESLint, PostCSS                            |
+| **Deployment**          | Vercel (Frontends), Render / (Microservices)           |
+| **Monorepo Tooling**    | Turborepo                                              |
+
+---
