@@ -1,4 +1,4 @@
-# 🛒 E-Commerce & Admin Monorepo
+# 🛒 E-Commerce & Admin
 
 **E-Commerce & Admin** is a modern e-commerce platform built as a **Turborepo monorepo** with microfrontends and microservices, integrating **two microfrontends** (`ecommerce` and `admin`) and **four independent microservices** for a scalable, modular, and high-performance system.
 
