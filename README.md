@@ -104,3 +104,26 @@ Each microservice runs **independently**, has its own **MongoDB database**, and 
 | **Monorepo Tooling**    | Turborepo                                              |
 
 ---
+
+## ⚙️ CI/CD & Automation
+
+This project includes a full GitHub Actions workflow for continuous integration, testing, and deployment:
+
+- **Continuous Integration (CI)**
+  - Runs on `push` or `pull_request` events to `master`.
+  - Lints code with **ESLint**.
+  - Builds the project.
+  - Runs **unit and integration tests** using **Jest**.
+
+- **Continuous Deployment (CD)**
+  - Automatic deployment to **Vercel and Render** after CI succeeds.
+  - Manual approval required for production deployment.
+  - Discord notifications for successful production deployments.
+  - [CI/CD Discord channel here!](https://discord.com/channels/1433886988158763124/1433886988980719819)
+
+- **Performance & Quality Checks**
+  - Weekly **Lighthouse audits** scheduled with GitHub Actions.
+  - Dependabot keeps **npm dependencies** and **GitHub Actions** up-to-date weekly.
+
+- **Reusable Workflows**
+  - CI tasks are modularized in a **reusable workflow** for maintainability and consistency.

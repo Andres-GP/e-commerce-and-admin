@@ -1,0 +1,48 @@
+name: Deploy to Vercel
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+
+jobs:
+  deploy-prod:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://e-commerce-and-admin-ecommerce.vercel.app/
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+        env:
+          NEXT_PUBLIC_CART_SERVICE_URL: ${{ secrets.NEXT_PUBLIC_CART_SERVICE_URL }}
+          NEXT_PUBLIC_ORDERS_SERVICE_URL: ${{ secrets.NEXT_PUBLIC_ORDERS_SERVICE_URL }}
+          NEXT_PUBLIC_PRODUCTS_SERVICE_URL: ${{ secrets.NEXT_PUBLIC_PRODUCTS_SERVICE_URL }}
+          NEXT_PUBLIC_REVIEW_SERVICE_URL: ${{ secrets.NEXT_PUBLIC_REVIEW_SERVICE_URL }}
+
+      - name: Deploy to Vercel (Prod)
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN_ECOMMERCE }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID_ECOMMERCE }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID_ECOMMERCE }}
+          working-directory: ./
+
+      - name: Notify Discord
+        uses: Ilshidur/action-discord@0.4.0
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        with:
+          args: "✅ Production deployed for ${{ github.repository }}!"

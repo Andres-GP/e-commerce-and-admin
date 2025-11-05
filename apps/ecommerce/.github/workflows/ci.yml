@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+
+jobs:
+  quality-checks:
+    uses: ./.github/workflows/reusable-build.yml
+    with:
+      node-version: 22
+    secrets:
+      NEXT_PUBLIC_CART_SERVICE_URL: ${{ secrets.NEXT_PUBLIC_CART_SERVICE_URL }}
+      NEXT_PUBLIC_ORDERS_SERVICE_URL: ${{ secrets.NEXT_PUBLIC_ORDERS_SERVICE_URL }}
+      NEXT_PUBLIC_PRODUCTS_SERVICE_URL: ${{ secrets.NEXT_PUBLIC_PRODUCTS_SERVICE_URL }}
+      NEXT_PUBLIC_REVIEW_SERVICE_URL: ${{ secrets.NEXT_PUBLIC_REVIEW_SERVICE_URL }}
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    needs: quality-checks
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+      - run: npm ci
+      - name: Run unit & integration tests
+        run: npm test -- --coverage
