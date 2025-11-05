@@ -7,6 +7,9 @@ on:
         required: false
         type: string
         default: "22"
+    app-name:
+      required: true
+      type: string
     secrets:
       NEXT_PUBLIC_CART_SERVICE_URL:
         required: true
@@ -32,7 +35,7 @@ jobs:
         run: npm ci
 
       - name: Build project
-        run: npm run build
+        run: npx turbo run build --filter=${{ inputs['app-name'] }}...
         env:
           NEXT_PUBLIC_CART_SERVICE_URL: ${{ secrets.NEXT_PUBLIC_CART_SERVICE_URL }}
           NEXT_PUBLIC_ORDERS_SERVICE_URL: ${{ secrets.NEXT_PUBLIC_ORDERS_SERVICE_URL }}

@@ -1,4 +1,4 @@
-name: CI
+name: CI - Admin
 
 on:
   pull_request:
@@ -8,9 +8,10 @@ on:
 
 jobs:
   quality-checks:
-    uses: ./.github/workflows/reusable-build.yml
+    uses: ../.github/workflows/reusable-build.yml
     with:
       node-version: 22
+      app-name: admin
     secrets:
       NEXT_PUBLIC_CART_SERVICE_URL: ${{ secrets.NEXT_PUBLIC_CART_SERVICE_URL }}
       NEXT_PUBLIC_ORDERS_SERVICE_URL: ${{ secrets.NEXT_PUBLIC_ORDERS_SERVICE_URL }}
@@ -28,4 +29,4 @@ jobs:
           cache: "npm"
       - run: npm ci
       - name: Run unit & integration tests
-        run: npm test -- --coverage
+        run: npx turbo run test --filter=admin...
